@@ -78,6 +78,49 @@ const StemsModal = ({ show, onClose, track }) => {
 
   const downloadFile = (fileUrl) => window.open(fileUrl, '_blank');
 
+  const downloadAll = async (format) => {
+    if (!jobStatus?.jobId) return;
+    setIsDownloading(true);
+
+    try {
+      if (format === 'wav') {
+        toast.loading('Converting stems to WAV format... This may take several minutes.', {
+          duration: 5000,
+          id: 'wav-conversion'
+        });
+      } else {
+        toast.loading('Preparing MP3 download...', {
+          duration: 3000,
+          id: 'mp3-download'
+        });
+      }
+
+      const link = document.createElement('a');
+      link.href = `/api/stems/download/${jobStatus.jobId}?format=${format}`;
+      link.download = `stems-${jobStatus.jobId}-${format}.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      setTimeout(() => {
+        toast.dismiss('wav-conversion');
+        toast.dismiss('mp3-download');
+        toast.success(
+          format === 'wav'
+            ? 'WAV conversion complete! Your download should start shortly.'
+            : 'Download started successfully!'
+        );
+        setIsDownloading(false);
+      }, 2000);
+    } catch (err) {
+      console.error('Download error:', err);
+      toast.dismiss('wav-conversion');
+      toast.dismiss('mp3-download');
+      toast.error('Failed to start download. Please try again.');
+      setIsDownloading(false);
+    }
+  };
+
   const formatTime = (t) => {
     if (!t || isNaN(t)) return '0:00';
     const m = Math.floor(t / 60);
