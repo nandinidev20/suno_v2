@@ -261,20 +261,121 @@ const StemsModal = ({ show, onClose, track }) => {
                 )}
 
                 {isCompleted && (
-                  <div className="alert alert-success d-flex align-items-center" style={{fontSize:13}}>
-                    <i className="bi bi-check-circle-fill me-2" style={{fontSize:16}}></i>
-                    <div>
-                      <strong>Extraction Complete!</strong>
-                      <div style={{fontSize:12, marginTop:4}}>Your stems have been automatically downloaded as a WAV ZIP file.</div>
+                  <div>
+                    <div className="alert alert-success d-flex align-items-center" style={{fontSize:13, marginBottom: 20}}>
+                      <i className="bi bi-check-circle-fill me-2" style={{fontSize:16}}></i>
+                      <div>
+                        <strong>Extraction Complete!</strong>
+                        <div style={{fontSize:12, marginTop:4}}>Your stems are ready. Choose how to download them below.</div>
+                      </div>
+                    </div>
+
+                    <table className="table table-dark table-striped" style={{marginTop:20}}>
+                      <thead>
+                        <tr>
+                          <th>Stem Name</th>
+                          <th>Audio Type</th>
+                          <th>Download</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {jobStatus?.stems && jobStatus.stems.filter(s => filterType==='all' ? true : s.type===filterType).map((s, i) => (
+                          <tr key={i}>
+                            <td>{s.name}</td>
+                            <td>{s.type}</td>
+                            <td>
+                              <button className="btn btn-link text-white" onClick={() => downloadFile(s.url)}>
+                                <i className="bi bi-download"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+
+                    <div className="mt-4">
+                      <div className="d-flex justify-content-between align-items-center mb-2">
+                        <div style={{fontSize: '14px', color: '#9aa0b4'}}>
+                          Download all stems as a ZIP file
+                        </div>
+                      </div>
+                      <div className="d-flex gap-2">
+                        <button
+                          className="btn d-flex align-items-center justify-content-center flex-1"
+                          onClick={() => downloadAll('mp3')}
+                          disabled={isDownloading}
+                          style={{
+                            background:'linear-gradient(90deg,var(--orange),var(--pink))',
+                            color:'#fff',
+                            border:'none',
+                            flex: 1,
+                            padding: '10px 20px'
+                          }}
+                        >
+                          {isDownloading ? (
+                            <>
+                              <span className="spinner-border spinner-border-sm me-2" role="status" />
+                              Preparing ZIP...
+                            </>
+                          ) : (
+                            <>
+                              <i className="bi bi-file-earmark-music me-2" /> Download as MP3 (Original)
+                            </>
+                          )}
+                        </button>
+                        <button
+                          className="btn d-flex align-items-center justify-content-center flex-1"
+                          onClick={() => downloadAll('wav')}
+                          disabled={isDownloading}
+                          style={{
+                            background:'linear-gradient(90deg,var(--purple),var(--blue))',
+                            color:'#fff',
+                            border:'none',
+                            flex: 1,
+                            padding: '10px 20px'
+                          }}
+                        >
+                          {isDownloading ? (
+                            <>
+                              <span className="spinner-border spinner-border-sm me-2" role="status" />
+                              Converting to WAV...
+                            </>
+                          ) : (
+                            <>
+                              <i className="bi bi-file-earmark-music-fill me-2" /> Download as WAV (Converted)
+                            </>
+                          )}
+                        </button>
+                      </div>
+                      <div style={{fontSize: '12px', color: '#7a7a8a', marginTop: '8px'}}>
+                        <i className="bi bi-info-circle me-1" />
+                        WAV conversion may take a few minutes depending on file size and number of stems
+                      </div>
+                    </div>
+
+                    <div className="d-flex gap-2 mt-4">
+                      <button className="btn btn-outline-light" onClick={handleCancel} style={{flex:1}}>
+                        Close
+                      </button>
                     </div>
                   </div>
                 )}
 
-                <div className="d-flex gap-2 mt-3">
-                  <button className="btn btn-outline-light" onClick={handleCancel} style={{flex:1}}>
-                    {isCompleted ? 'Close' : 'Cancel'}
-                  </button>
-                </div>
+                {!isCompleted && !isExtracting && !isFailed && (
+                  <div className="d-flex gap-2 mt-3">
+                    <button className="btn btn-outline-light" onClick={handleCancel} style={{flex:1}}>
+                      Cancel
+                    </button>
+                  </div>
+                )}
+
+                {isExtracting && !isCompleted && (
+                  <div className="d-flex gap-2 mt-3">
+                    <button className="btn btn-outline-light" onClick={handleCancel} style={{flex:1}}>
+                      {isCompleted ? 'Close' : 'Cancel'}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
