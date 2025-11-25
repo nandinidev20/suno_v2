@@ -344,7 +344,7 @@ export const StemsProvider = ({ children }) => {
 
       console.log('StemsContext: Modal closed for jobId:', jobId);
     }
-  }, []);
+  }, [triggerAutoDownload]);
 
   const value = {
     jobs,
