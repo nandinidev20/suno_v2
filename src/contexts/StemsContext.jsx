@@ -317,14 +317,16 @@ export const StemsProvider = ({ children }) => {
     }
   }, []);
 
-  // Set modal open state
+  // Set modal open state using ref (always latest value for event handlers)
   const setModalOpen = useCallback((jobId, isOpen) => {
     if (isOpen) {
-      setModalOpenForJobId(jobId);
-      console.log('StemsContext: Modal opened for jobId:', jobId);
+      modalOpenForJobIdRef.current = jobId;
+      setModalOpenState(jobId); // Trigger re-render if needed
+      console.log('StemsContext: Modal opened for jobId:', jobId, 'ref.current:', modalOpenForJobIdRef.current);
     } else {
-      setModalOpenForJobId(null);
-      console.log('StemsContext: Modal closed for jobId:', jobId);
+      modalOpenForJobIdRef.current = null;
+      setModalOpenState(null); // Trigger re-render if needed
+      console.log('StemsContext: Modal closed for jobId:', jobId, 'ref.current:', modalOpenForJobIdRef.current);
     }
   }, []);
 
