@@ -5,6 +5,7 @@ import { tracksAPI } from "../utils/api";
 import LeftSideBar from "../components/LeftSideBar";
 import StemsModal from "../components/StemsModal";
 import AudioToMidiModal from "../components/AudioToMidiModal";
+import { useStemsManager } from "../contexts/StemsContext";
 
 const SONGS_PER_PAGE = 15;
 
