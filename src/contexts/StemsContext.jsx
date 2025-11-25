@@ -107,18 +107,36 @@ export const StemsProvider = ({ children }) => {
 
           if (job) {
             const toastKey = payload.jobId || payload.external_job_id || job.jobId;
+            const isModalOpen = modalOpenForJobId === job.jobId;
+
+            // Prepare stems data for display
+            const normalizedStems = (payload.stems && Array.isArray(payload.stems))
+              ? payload.stems.map(s => ({ name: s.name || s.stem || 'stem', type: s.type || 'wav', url: s.url }))
+              : [];
+
             if (toastKey && !shownToasts.current.has(toastKey)) {
               shownToasts.current.add(toastKey);
-              toast.success('Stems ready! Downloading...');
-              triggerAutoDownload(job.jobId, job.trackName);
+
+              if (isModalOpen) {
+                // Modal is open - don't auto-download, just show ready message
+                toast.success('Stems ready! View them in the modal.');
+              } else {
+                // Modal is closed - auto-download
+                toast.success('Stems ready! Auto-downloading...');
+                triggerAutoDownload(job.jobId, job.trackName);
+              }
             }
+
+            console.log('StemsContext: Modal open for this job?', isModalOpen, 'jobId:', job.jobId);
 
             return {
               ...prevJobs,
               [job.jobId]: {
                 ...job,
                 status: 'completed',
-                progress: 100
+                progress: 100,
+                stems: normalizedStems,
+                isModalOpen: isModalOpen
               }
             };
           }
