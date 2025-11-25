@@ -5,11 +5,13 @@ import { tracksAPI } from "../utils/api";
 import LeftSideBar from "../components/LeftSideBar";
 import StemsModal from "../components/StemsModal";
 import AudioToMidiModal from "../components/AudioToMidiModal";
+import { useStemsManager } from "../contexts/StemsContext";
 
 const SONGS_PER_PAGE = 15;
 
 const Library = () => {
   const navigate = useNavigate();
+  const { jobs } = useStemsManager();
   const [tracks, setTracks] = useState([]);
   const [allTracks, setAllTracks] = useState([]); // for client-side search/filter
   const [loading, setLoading] = useState(true);
@@ -501,7 +503,27 @@ const Library = () => {
                                   <ul className="dropdown-menu">
                                     {track.conversion_type !== 'OneShot' && (
                                       <>
-                                        <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setStemsTrack(track); setShowStemsModal(true); }}>Get Stems</a></li>
+                                        {(() => {
+                                          const trackId = track._id || track.id;
+                                          const jobStatus = Object.values(jobs).find(j => j.trackId === trackId);
+                                          if (!jobStatus) {
+                                            return (
+                                              <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setStemsTrack(track); setShowStemsModal(true); }}>Get Stems</a></li>
+                                            );
+                                          } else if (jobStatus.status === 'processing') {
+                                            return (
+                                              <li><a className="dropdown-item disabled" style={{cursor: 'not-allowed', opacity: 0.7}}>{jobStatus.progress}%</a></li>
+                                            );
+                                          } else if (jobStatus.status === 'failed') {
+                                            return (
+                                              <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setStemsTrack(track); setShowStemsModal(true); }}>Retry Extraction</a></li>
+                                            );
+                                          } else if (jobStatus.status === 'completed') {
+                                            return (
+                                              <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setStemsTrack(track); setShowStemsModal(true); }}>Get Stems</a></li>
+                                            );
+                                          }
+                                        })()}
                                         <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); handleRemixCover(track); }}>Remix</a></li>
                                         <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setMidiTrack(track); setShowMidiModal(true); }}>Get MIDI</a></li>
                                       </>

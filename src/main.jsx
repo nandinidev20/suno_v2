@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import App from './App.jsx'
 import { AuthProvider } from './contexts/AuthContext'
 import { AdminAuthProvider } from './contexts/AdminAuthContext'
+import { StemsProvider } from './contexts/StemsContext'
 //import './index.css'
 
 if (typeof document !== 'undefined') {
@@ -16,35 +17,37 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <AuthProvider>
         <AdminAuthProvider>
-          <App />
-          <Toaster 
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: 'rgba(17,24,39,0.85)',
-              color: '#e5e7eb',
-              border: '1px solid rgba(255,255,255,0.08)',
-              backdropFilter: 'blur(8px)'
-            },
-            success: {
-              duration: 3000,
-              iconTheme: {
-                primary: '#10b981',
-                secondary: '#111827',
+          <StemsProvider>
+            <App />
+            <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: 'rgba(17,24,39,0.85)',
+                color: '#e5e7eb',
+                border: '1px solid rgba(255,255,255,0.08)',
+                backdropFilter: 'blur(8px)'
               },
-            },
-            error: {
-              duration: 5000,
-              iconTheme: {
-                primary: '#ef4444',
-                secondary: '#111827',
+              success: {
+                duration: 3000,
+                iconTheme: {
+                  primary: '#10b981',
+                  secondary: '#111827',
+                },
               },
-            },
-          }}
-        />
+              error: {
+                duration: 5000,
+                iconTheme: {
+                  primary: '#ef4444',
+                  secondary: '#111827',
+                },
+              },
+            }}
+          />
+          </StemsProvider>
         </AdminAuthProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,
-) 
+)
