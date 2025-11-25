@@ -3,7 +3,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useStemsManager } from '../contexts/StemsContext';
 
 const StemsModal = ({ show, onClose, track }) => {
-  const { startExtraction, getJobStatus } = useStemsManager();
+  const { startExtraction, jobs } = useStemsManager();
   const [loading, setLoading] = useState(false);
   const [filterType, setFilterType] = useState('all');
   const [errorMsg, setErrorMsg] = useState(null);
@@ -13,8 +13,9 @@ const StemsModal = ({ show, onClose, track }) => {
   const [smallDuration, setSmallDuration] = useState(0);
   const audioSmallRef = useRef(null);
 
-  // Get current job status for this track
-  const jobStatus = getJobStatus(track?._id || track?.id);
+  // Get current job status for this track - subscribe to jobs updates
+  const trackId = track?._id || track?.id;
+  const jobStatus = Object.values(jobs).find(j => j.trackId === trackId);
 
   // Small player listeners
   useEffect(() => {
