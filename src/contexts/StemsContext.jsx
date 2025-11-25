@@ -16,7 +16,8 @@ export const useStemsManager = () => {
 export const StemsProvider = ({ children }) => {
   const [jobs, setJobs] = useState({}); // { jobId: { jobId, externalJobId, trackId, trackName, status, progress, error, stems } }
   const [socketConnected, setSocketConnected] = useState(false);
-  const [modalOpenForJobId, setModalOpenForJobId] = useState(null); // Track which job's modal is open
+  const [, setModalOpenState] = useState(null); // Trigger re-render, but actual tracking is in ref
+  const modalOpenForJobIdRef = useRef(null); // Use ref so event handlers always have latest value
   const socketRef = useRef(null);
   const shownToasts = useRef(new Set());
   const jobTimersRef = useRef({});
