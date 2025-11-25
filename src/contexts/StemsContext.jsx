@@ -179,6 +179,18 @@ export const StemsProvider = ({ children }) => {
     };
   }, []);
 
+  // Rejoin socket rooms when socket connects or jobs change
+  useEffect(() => {
+    if (!socketRef.current || !socketConnected) return;
+
+    Object.values(jobs).forEach(job => {
+      if (job.status === 'processing' && job.jobId) {
+        socketRef.current.emit('join_stems_room', job.jobId);
+        console.log('StemsContext: Rejoined room for jobId:', job.jobId);
+      }
+    });
+  }, [socketConnected, jobs]);
+
   // Auto-download WAV zip
   const triggerAutoDownload = useCallback((jobId, trackName) => {
     try {
