@@ -14,8 +14,9 @@ export const useStemsManager = () => {
 };
 
 export const StemsProvider = ({ children }) => {
-  const [jobs, setJobs] = useState({}); // { jobId: { jobId, externalJobId, trackId, trackName, status, progress, error } }
+  const [jobs, setJobs] = useState({}); // { jobId: { jobId, externalJobId, trackId, trackName, status, progress, error, stems } }
   const [socketConnected, setSocketConnected] = useState(false);
+  const [modalOpenForJobId, setModalOpenForJobId] = useState(null); // Track which job's modal is open
   const socketRef = useRef(null);
   const shownToasts = useRef(new Set());
   const jobTimersRef = useRef({});
