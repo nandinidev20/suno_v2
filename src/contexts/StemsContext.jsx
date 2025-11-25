@@ -289,7 +289,8 @@ export const StemsProvider = ({ children }) => {
     getAllJobs,
     retryExtraction,
     disconnectSocket,
-    triggerAutoDownload
+    triggerAutoDownload,
+    getJobByTrackId: (trackId) => Object.values(jobs).find(j => j.trackId === trackId)
   };
 
   return <StemsContext.Provider value={value}>{children}</StemsContext.Provider>;
