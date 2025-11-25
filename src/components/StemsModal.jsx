@@ -3,7 +3,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useStemsManager } from '../contexts/StemsContext';
 
 const StemsModal = ({ show, onClose, track }) => {
-  const { startExtraction, jobs } = useStemsManager();
+  const { startExtraction, jobs, setModalOpen } = useStemsManager();
   const [loading, setLoading] = useState(false);
   const [filterType, setFilterType] = useState('all');
   const [errorMsg, setErrorMsg] = useState(null);
@@ -11,11 +11,21 @@ const StemsModal = ({ show, onClose, track }) => {
   const [isSmallPlaying, setIsSmallPlaying] = useState(false);
   const [smallCurrentTime, setSmallCurrentTime] = useState(0);
   const [smallDuration, setSmallDuration] = useState(0);
+  const [isDownloading, setIsDownloading] = useState(false);
   const audioSmallRef = useRef(null);
 
   // Get current job status for this track - subscribe to jobs updates
   const trackId = track?._id || track?.id;
   const jobStatus = Object.values(jobs).find(j => j.trackId === trackId);
+
+  // Update modal state when show changes
+  useEffect(() => {
+    if (show && jobStatus?.jobId) {
+      setModalOpen(jobStatus.jobId, true);
+    } else if (!show && jobStatus?.jobId) {
+      setModalOpen(jobStatus.jobId, false);
+    }
+  }, [show, jobStatus?.jobId, setModalOpen]);
 
   // Small player listeners
   useEffect(() => {
