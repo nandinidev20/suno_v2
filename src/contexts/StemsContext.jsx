@@ -70,22 +70,28 @@ export const StemsProvider = ({ children }) => {
     // Handle stems_progress event
     const onStemsProgress = (p) => {
       try {
-        if (!p) return;
-        console.log('StemsContext: stems_progress received:', p);
+        if (!p || !p.jobId) return;
+        console.log('StemsContext: stems_progress received - jobId:', p.jobId, 'progress:', p.progress, 'status:', p.status);
 
         setJobs(prevJobs => {
-          const job = Object.values(prevJobs).find(
-            j => j.jobId === p.jobId || j.externalJobId === p.jobId
-          );
-          if (job) {
+          let matchedJob = prevJobs[p.jobId];
+          if (!matchedJob) {
+            matchedJob = Object.values(prevJobs).find(
+              j => j.externalJobId === p.jobId || j.externalJobId === p.external_job_id
+            );
+          }
+
+          if (matchedJob) {
             const display = p.status === 'completed' ? 100 : Math.min(99, p.progress || 0);
+            const updatedJob = {
+              ...matchedJob,
+              progress: display,
+              status: p.status || 'processing'
+            };
+            console.log('StemsContext: Updating job', matchedJob.jobId, 'to progress:', display);
             return {
               ...prevJobs,
-              [job.jobId]: {
-                ...job,
-                progress: display,
-                status: p.status || 'processing'
-              }
+              [matchedJob.jobId]: updatedJob
             };
           }
           return prevJobs;
