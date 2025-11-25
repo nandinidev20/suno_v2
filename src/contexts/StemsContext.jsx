@@ -111,6 +111,7 @@ export const StemsProvider = ({ children }) => {
             const toastKey = payload.jobId || payload.external_job_id || job.jobId;
             // Check ref value - this is always up-to-date
             const isModalOpen = modalOpenForJobIdRef.current === job.jobId;
+            const hasAutoDownloaded = autoDownloadedJobs.current.has(job.jobId);
 
             // Prepare stems data for display
             const normalizedStems = (payload.stems && Array.isArray(payload.stems))
@@ -124,15 +125,16 @@ export const StemsProvider = ({ children }) => {
                 // Modal is open - don't auto-download, just show ready message
                 console.log('StemsContext: Modal is OPEN - NOT auto-downloading');
                 toast.success('Stems ready! View them in the modal.');
-              } else {
-                // Modal is closed - auto-download
+              } else if (!hasAutoDownloaded) {
+                // Modal is closed AND not yet auto-downloaded - auto-download now
                 console.log('StemsContext: Modal is CLOSED - AUTO-DOWNLOADING');
                 toast.success('Stems ready! Auto-downloading...');
+                autoDownloadedJobs.current.add(job.jobId);
                 triggerAutoDownload(job.jobId, job.trackName);
               }
             }
 
-            console.log('StemsContext: Modal open for this job?', isModalOpen, 'jobId:', job.jobId, 'modalOpenForJobIdRef.current:', modalOpenForJobIdRef.current);
+            console.log('StemsContext: Modal open?', isModalOpen, 'Auto-downloaded?', hasAutoDownloaded, 'jobId:', job.jobId);
 
             return {
               ...prevJobs,
