@@ -20,6 +20,7 @@ export const StemsProvider = ({ children }) => {
   const modalOpenForJobIdRef = useRef(null); // Use ref so event handlers always have latest value
   const socketRef = useRef(null);
   const shownToasts = useRef(new Set());
+  const autoDownloadedJobs = useRef(new Set()); // Track which jobs have been auto-downloaded
   const jobTimersRef = useRef({});
 
   // Initialize socket on component mount
