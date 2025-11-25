@@ -324,6 +324,16 @@ export const StemsProvider = ({ children }) => {
       setModalOpenState(jobId); // Trigger re-render if needed
       console.log('StemsContext: Modal opened for jobId:', jobId, 'ref.current:', modalOpenForJobIdRef.current);
     } else {
+      // Check if the job is already completed - if so, trigger auto-download
+      setJobs(prevJobs => {
+        const job = prevJobs[jobId];
+        if (job && job.status === 'completed') {
+          console.log('StemsContext: Modal closed for completed job - triggering auto-download for jobId:', jobId);
+          triggerAutoDownload(jobId, job.trackName);
+        }
+        return prevJobs;
+      });
+
       modalOpenForJobIdRef.current = null;
       setModalOpenState(null); // Trigger re-render if needed
       console.log('StemsContext: Modal closed for jobId:', jobId, 'ref.current:', modalOpenForJobIdRef.current);
