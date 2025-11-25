@@ -519,7 +519,9 @@ const Library = () => {
                                               <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setStemsTrack(track); setShowStemsModal(true); }}>Retry Extraction</a></li>
                                             );
                                           } else if (jobStatus.status === 'completed') {
-                                            return null;
+                                            return (
+                                              <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setStemsTrack(track); setShowStemsModal(true); }}>Extract Again</a></li>
+                                            );
                                           }
                                         })()}
                                         <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); handleRemixCover(track); }}>Remix</a></li>
