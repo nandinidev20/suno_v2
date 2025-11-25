@@ -54,11 +54,6 @@ export const StemsProvider = ({ children }) => {
     socket.on('reconnect', () => {
       console.info('StemsContext: Socket reconnected');
       setSocketConnected(true);
-      Object.values(jobs).forEach(job => {
-        if (job.status === 'processing' && job.jobId) {
-          socket.emit('join_stems_room', job.jobId);
-        }
-      });
     });
 
     // Handle stems_progress event
