@@ -503,7 +503,24 @@ const Library = () => {
                                   <ul className="dropdown-menu">
                                     {track.conversion_type !== 'OneShot' && (
                                       <>
-                                        <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setStemsTrack(track); setShowStemsModal(true); }}>Get Stems</a></li>
+                                        {(() => {
+                                          const jobStatus = getJobStatus(track._id || track.id);
+                                          if (!jobStatus) {
+                                            return (
+                                              <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setStemsTrack(track); setShowStemsModal(true); }}>Get Stems</a></li>
+                                            );
+                                          } else if (jobStatus.status === 'processing') {
+                                            return (
+                                              <li><a className="dropdown-item disabled" style={{cursor: 'not-allowed', opacity: 0.7}}>{jobStatus.progress}%</a></li>
+                                            );
+                                          } else if (jobStatus.status === 'failed') {
+                                            return (
+                                              <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setStemsTrack(track); setShowStemsModal(true); }}>Retry Extraction</a></li>
+                                            );
+                                          } else if (jobStatus.status === 'completed') {
+                                            return null;
+                                          }
+                                        })()}
                                         <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); handleRemixCover(track); }}>Remix</a></li>
                                         <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setMidiTrack(track); setShowMidiModal(true); }}>Get MIDI</a></li>
                                       </>
