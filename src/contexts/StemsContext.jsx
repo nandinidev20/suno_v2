@@ -223,10 +223,9 @@ export const StemsProvider = ({ children }) => {
       const trackId = track._id || track.id;
       const trackName = track.prompt || track.title || 'Unknown';
 
-      // Add job to context
-      setJobs(prevJobs => ({
-        ...prevJobs,
-        [jobId]: {
+      // Add job to context with trackId for proper tracking
+      setJobs(prevJobs => {
+        const newJob = {
           jobId,
           externalJobId,
           trackId,
@@ -234,13 +233,20 @@ export const StemsProvider = ({ children }) => {
           status: 'processing',
           progress: 0,
           error: null
-        }
-      }));
+        };
+        console.log('StemsContext: Adding job to context:', newJob);
+        return {
+          ...prevJobs,
+          [jobId]: newJob
+        };
+      });
 
-      // Join socket room
-      if (socketRef.current) {
+      // Join socket room - make sure socket is connected
+      if (socketRef.current && socketRef.current.connected) {
         socketRef.current.emit('join_stems_room', jobId);
-        console.log('StemsContext: Joined room for jobId:', jobId);
+        console.log('StemsContext: Joined room for jobId:', jobId, 'socket connected:', socketRef.current.connected);
+      } else {
+        console.warn('StemsContext: Socket not connected yet, will rejoin on reconnect');
       }
 
       toast.success(`Extracting stems from ${trackName}...`);
