@@ -504,7 +504,8 @@ const Library = () => {
                                     {track.conversion_type !== 'OneShot' && (
                                       <>
                                         {(() => {
-                                          const jobStatus = getJobStatus(track._id || track.id);
+                                          const trackId = track._id || track.id;
+                                          const jobStatus = Object.values(jobs).find(j => j.trackId === trackId);
                                           if (!jobStatus) {
                                             return (
                                               <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setStemsTrack(track); setShowStemsModal(true); }}>Get Stems</a></li>
