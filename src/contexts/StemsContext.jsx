@@ -43,13 +43,7 @@ export const StemsProvider = ({ children }) => {
     socket.on('connect', () => {
       console.info('StemsContext: Socket connected', socket.id);
       setSocketConnected(true);
-      // Rejoin rooms for incomplete jobs
-      Object.values(jobs).forEach(job => {
-        if (job.status === 'processing' && job.jobId) {
-          socket.emit('join_stems_room', job.jobId);
-          console.log('StemsContext: Rejoined room for jobId:', job.jobId);
-        }
-      });
+      console.log('StemsContext: Socket URL:', SOCKET_URL, 'Transport:', socket.io.engine.transport.name);
     });
 
     socket.on('connect_error', (err) => {
