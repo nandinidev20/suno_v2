@@ -325,21 +325,24 @@ export const StemsProvider = ({ children }) => {
     if (isOpen) {
       modalOpenForJobIdRef.current = jobId;
       setModalOpenState(jobId); // Trigger re-render if needed
-      console.log('StemsContext: Modal opened for jobId:', jobId, 'ref.current:', modalOpenForJobIdRef.current);
+      console.log('StemsContext: Modal opened for jobId:', jobId);
     } else {
-      // Check if the job is already completed - if so, trigger auto-download
+      modalOpenForJobIdRef.current = null;
+      setModalOpenState(null); // Trigger re-render if needed
+
+      // If job is completed and not yet auto-downloaded, trigger auto-download now
       setJobs(prevJobs => {
         const job = prevJobs[jobId];
-        if (job && job.status === 'completed') {
+        if (job && job.status === 'completed' && !autoDownloadedJobs.current.has(jobId)) {
           console.log('StemsContext: Modal closed for completed job - triggering auto-download for jobId:', jobId);
+          autoDownloadedJobs.current.add(jobId);
+          toast.success('Auto-downloading stems...');
           triggerAutoDownload(jobId, job.trackName);
         }
         return prevJobs;
       });
 
-      modalOpenForJobIdRef.current = null;
-      setModalOpenState(null); // Trigger re-render if needed
-      console.log('StemsContext: Modal closed for jobId:', jobId, 'ref.current:', modalOpenForJobIdRef.current);
+      console.log('StemsContext: Modal closed for jobId:', jobId);
     }
   }, []);
 
