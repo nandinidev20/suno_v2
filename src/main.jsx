@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import App from './App.jsx'
 import { AuthProvider } from './contexts/AuthContext'
 import { AdminAuthProvider } from './contexts/AdminAuthContext'
+import { StemsProvider } from './contexts/StemsContext'
 //import './index.css'
 
 if (typeof document !== 'undefined') {
@@ -47,4 +48,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,
-) 
+)
