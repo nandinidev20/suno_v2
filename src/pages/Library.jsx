@@ -520,7 +520,7 @@ const Library = () => {
                                             );
                                           } else if (jobStatus.status === 'completed') {
                                             return (
-                                              <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setStemsTrack(track); setShowStemsModal(true); }}>Extract Again</a></li>
+                                              <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); setStemsTrack(track); setShowStemsModal(true); }}>Get Stems</a></li>
                                             );
                                           }
                                         })()}
