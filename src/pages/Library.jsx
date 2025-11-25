@@ -11,6 +11,7 @@ const SONGS_PER_PAGE = 15;
 
 const Library = () => {
   const navigate = useNavigate();
+  const { getJobStatus } = useStemsManager();
   const [tracks, setTracks] = useState([]);
   const [allTracks, setAllTracks] = useState([]); // for client-side search/filter
   const [loading, setLoading] = useState(true);
