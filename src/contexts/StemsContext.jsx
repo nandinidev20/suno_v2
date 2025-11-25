@@ -313,6 +313,17 @@ export const StemsProvider = ({ children }) => {
     }
   }, []);
 
+  // Set modal open state
+  const setModalOpen = useCallback((jobId, isOpen) => {
+    if (isOpen) {
+      setModalOpenForJobId(jobId);
+      console.log('StemsContext: Modal opened for jobId:', jobId);
+    } else {
+      setModalOpenForJobId(null);
+      console.log('StemsContext: Modal closed for jobId:', jobId);
+    }
+  }, []);
+
   const value = {
     jobs,
     socketConnected,
