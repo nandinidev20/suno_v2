@@ -361,21 +361,6 @@ const StemsModal = ({ show, onClose, track }) => {
                   </div>
                 )}
 
-                {!isCompleted && !isExtracting && !isFailed && (
-                  <div className="d-flex gap-2 mt-3">
-                    <button className="btn btn-outline-light" onClick={handleCancel} style={{flex:1}}>
-                      Cancel
-                    </button>
-                  </div>
-                )}
-
-                {isExtracting && !isCompleted && (
-                  <div className="d-flex gap-2 mt-3">
-                    <button className="btn btn-outline-light" onClick={handleCancel} style={{flex:1}}>
-                      {isCompleted ? 'Close' : 'Cancel'}
-                    </button>
-                  </div>
-                )}
               </div>
             )}
 
