@@ -333,6 +333,7 @@ export const StemsProvider = ({ children }) => {
     retryExtraction,
     disconnectSocket,
     triggerAutoDownload,
+    setModalOpen,
     getJobByTrackId: (trackId) => Object.values(jobs).find(j => j.trackId === trackId)
   };
 
